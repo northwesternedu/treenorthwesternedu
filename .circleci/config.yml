@@ -1,0 +1,26 @@
+version: 2.1  # تحديد إصدار CircleCI
+
+jobs:  # تعريف المهام التي سيتم تنفيذها
+  deploy:  # اسم المهمة (يمكن تغييره)
+    docker:
+      - image: circleci/node:latest  # استخدام صورة Node.js داخل CircleCI
+    steps:
+      - checkout  # تنزيل الكود من GitHub إلى بيئة CircleCI
+      - run:
+          name: تثبيت gh-pages  # تثبيت أداة gh-pages لنشر الموقع
+          command: npm install -g gh-pages
+      - run:
+          name: نشر HTML إلى GitHub Pages  # تنفيذ أوامر النشر
+          command: |
+            git config --global user.email "your-email@example.com"
+            git config --global user.name "Your Name"
+            git checkout -b gh-pages
+            git add .
+            git commit -m "نشر الموقع"
+            git push --force origin gh-pages
+
+workflows:  # تحديد سير العمل (Workflow)
+  version: 2
+  deploy_workflow:
+    jobs:
+      - deploy  # تشغيل المهمة "deploy"
